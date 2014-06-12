@@ -1,6 +1,7 @@
 define(function (require) {
 
   describe("route", function () {
+    //Code smell - commend out code
 
     // beforeEach(function (done) {
     //   window.location.hash = "/";

@@ -1,3 +1,4 @@
+//UMD :) 
 (function (define) { 'use strict';
   define(function (require) {
     
@@ -8,6 +9,8 @@
     var handlerCreator = require("./lib/handler_creator");
     var noneLocation = require("./location/none_location");
 
+    //Use named functions vs anon function to make stack trace easier to read
+    //Any documentation about what options are?
     var CherrytreeRoute = function (options) {
       this.options = _.extend({
         location: noneLocation(),
@@ -20,8 +23,10 @@
       this.routeClasses = {};
       this.prepares = {};
 
+      //should enabling/disabling logging be the concern of this class? Would it not be better to have a separate class? 
       if (this.options.logging) {
         this.log = function () {
+          //lose information as it doesn't show the line the file was logged at
           console && console.log.apply(console, arguments);
         };
       }
@@ -37,6 +42,7 @@
         var router = this.router;
 
         var dsl = RouterDSL.map(this, function () {
+          //why not? this.resource("application", { path: "/" }, _.bind(this, callback));
           this.resource("application", { path: "/" }, function () {
             callback.call(this);
           });
@@ -55,6 +61,7 @@
 
       addRoutes: function (map) {
         _.each(map, function (route, name) {
+          //why not reverse args and save an anon function?
           this.addRoute(name, route);
         }, this);
       },
@@ -66,6 +73,8 @@
 
         setupRouter(this, router, location);
 
+        //avoid seld
+        //location.onChange(_.bind(this, this.handleUrl))
         location.onChange(function(url) {
           self.handleURL(url);
         });
@@ -74,6 +83,7 @@
       },
 
       transitionTo: function() {
+        //use _.toArray 
         var args = [].slice.call(arguments);
         return doTransition(this, 'transitionTo', args);
       },
@@ -127,6 +137,19 @@
       /**
        * @private
        */
+      //Use closures to define public/private
+      //
+      //function foo() {
+      //   this.bar = bar;
+      //
+      //   function bar() {
+      //      return bar();
+      //   }
+      //
+      //   function baz() {
+      //      return "baz";
+      //   }
+      //}
       log: function () {},
 
       /**
@@ -174,6 +197,7 @@
      * 
      */
 
+    //why have a function for one usage?
     function assert(desc, test) {
       if (!test) throw new Error("assertion failed: " + desc);
     }
